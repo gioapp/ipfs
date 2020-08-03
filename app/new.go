@@ -31,30 +31,30 @@ func NewGioIPFS() *GioIPFS {
 		app.Title(w.Podesavanja.Naziv),
 	)
 
-	menuItems = []nav.Item{
+	w.menuItems = []nav.Item{
 		nav.Item{
 			Title: "Status",
-			Icon:  th.Icons["StrokeMarketing"],
+			Icon:  w.UI.Tema.Icons["StrokeMarketing"],
 			Btn:   new(widget.Clickable),
 		},
 		nav.Item{
 			Title: "Files",
-			Icon:  "StrokeWeb",
+			Icon:  w.UI.Tema.Icons["StrokeWeb"],
 			Btn:   new(widget.Clickable),
 		},
 		nav.Item{
 			Title: "Explore",
-			Icon:  "StrokeIpld",
+			Icon:  w.UI.Tema.Icons["StrokeIpld"],
 			Btn:   new(widget.Clickable),
 		},
 		nav.Item{
 			Title: "Peers",
-			Icon:  "StrokeCube",
+			Icon:  w.UI.Tema.Icons["StrokeCube"],
 			Btn:   new(widget.Clickable),
 		},
 		nav.Item{
 			Title: "Settings",
-			Icon:  "StrokeSettings",
+			Icon:  w.UI.Tema.Icons["StrokeSettings"],
 			Btn:   new(widget.Clickable),
 		},
 	}

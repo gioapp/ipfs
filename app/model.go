@@ -7,6 +7,7 @@ import (
 	"gioui.org/op"
 	"gioui.org/widget"
 	"github.com/gioapp/gel/theme"
+	"github.com/gioapp/ipfs/pkg/nav"
 	shell "github.com/ipfs/go-ipfs-api"
 )
 
@@ -26,6 +27,7 @@ type GioIPFS struct {
 	ctx context.Context
 	UI  gipfsUI
 
+	menuItems   []nav.Item
 	Podesavanja gipfsPodesavanja
 	Prikaz      prikaz
 }

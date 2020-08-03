@@ -4,7 +4,6 @@ import (
 	"gioui.org/layout"
 	"gioui.org/text"
 	"gioui.org/unit"
-	"gioui.org/widget"
 	"gioui.org/widget/material"
 	"github.com/gioapp/ipfs/pkg/nav"
 	"github.com/w-ingsolutions/c/pkg/lyt"
@@ -19,12 +18,12 @@ type Page struct {
 
 func (w *GioIPFS) GlavniEkran(gtx layout.Context) {
 	lyt.Format(gtx, "hflexb(start,r(_),f(1,_))",
-		//w.Meni(),
+
 		func(gtx C) D {
 			n := nav.Navigation{
 				Name:  "Navigacion",
 				Bg:    w.UI.Tema.Colors["Primary"],
-				Items: menuItems,
+				Items: w.menuItems,
 			}
 			return n.Nav(w.UI.Tema, gtx)
 		},

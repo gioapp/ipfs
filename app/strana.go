@@ -52,15 +52,13 @@ func lista(ctx context.Context, sh *shell.Shell, th *theme.DuoUItheme, path stri
 			file := files[i]
 			return lyt.Format(gtx, "vflexb(middle,r(_),r(_))",
 				func(gtx C) D {
-					return lyt.Format(gtx, "hflexb(middle,r(_),r(_),f(0.8,_),r(_),f(0.2,_),r(_))",
+					return lyt.Format(gtx, "hflexb(middle,r(_),f(0.8,_),r(_),f(0.2,_),r(_))",
 						func(gtx C) D {
 							return material.CheckBox(th.T, file.check, "").Layout(gtx)
 						},
 						func(gtx C) D {
-							return material.Body1(th.T, "0").Layout(gtx)
-						},
-						func(gtx C) D {
 							return lyt.Format(gtx, "vflexb(middle,r(_),r(_))",
+
 								func(gtx C) D {
 									return material.Body1(th.T, file.Name).Layout(gtx)
 								},

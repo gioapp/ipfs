@@ -38,13 +38,16 @@ func (n *Navigation) Nav(th *theme.DuoUItheme, gtx layout.Context) layout.Dimens
 	//nav = append(nav, func(gtx layout.Context) layout.Dimensions {
 	//	return material.Body1(th.T, "testr").Layout(gtx)
 	//})
-
+	gtx.Constraints.Max.X = 180
 	return navList.Layout(gtx, len(n.Items), func(gtx layout.Context, i int) layout.Dimensions {
 		item := n.Items[i]
-		btn := icontextbtn.IconTextBtn(th.T, item.Btn, item.Icon, unit.Dp(48), th.Colors["Light"], item.Title)
+		btn := icontextbtn.IconTextBtn(th.T, item.Btn, item.Icon, unit.Dp(48), th.Colors["White"], item.Title)
 
+		btn.IconSize = unit.Dp(72)
+		btn.TextSize = unit.Dp(12)
+		btn.Axis = layout.Horizontal
 		btn.CornerRadius = unit.Dp(0)
-		btn.Background = helper.HexARGB(th.Colors["Gray"])
+		btn.Background = helper.HexARGB(th.Colors["Primary"])
 		return btn.Layout(gtx)
 	})
 }
