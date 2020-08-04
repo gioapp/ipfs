@@ -30,6 +30,7 @@ type GioIPFS struct {
 	menuItems   []nav.Item
 	Podesavanja gipfsPodesavanja
 	Prikaz      prikaz
+	ItemsList   []folderListItem
 }
 
 type prikaz struct {

@@ -5,8 +5,8 @@ import (
 	"gioui.org/unit"
 	"gioui.org/widget"
 	"github.com/gioapp/gel/helper"
-	"github.com/gioapp/gel/icontextbtn"
 	"github.com/gioapp/gel/theme"
+	"github.com/gioapp/ipfs/pkg/icontextbtn"
 )
 
 var (
@@ -41,6 +41,7 @@ func (n *Navigation) Nav(th *theme.DuoUItheme, gtx layout.Context) layout.Dimens
 	gtx.Constraints.Max.X = 180
 	return navList.Layout(gtx, len(n.Items), func(gtx layout.Context, i int) layout.Dimensions {
 		item := n.Items[i]
+
 		btn := icontextbtn.IconTextBtn(th.T, item.Btn, item.Icon, unit.Dp(48), th.Colors["White"], item.Title)
 
 		btn.IconSize = unit.Dp(72)

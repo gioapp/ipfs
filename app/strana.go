@@ -1,13 +1,11 @@
 package gipfs
 
 import (
-	"context"
 	"fmt"
 	"gioui.org/layout"
 	"gioui.org/widget"
-	"gioui.org/widget/material"
 	"github.com/gioapp/gel/helper"
-	"github.com/gioapp/gel/theme"
+	"github.com/gioapp/ipfs/pkg/itembtn"
 	shell "github.com/ipfs/go-ipfs-api"
 	"github.com/w-ingsolutions/c/pkg/lyt"
 	"os"
@@ -20,7 +18,7 @@ var (
 )
 
 func (w *GioIPFS) strana() func(gtx C) D {
-	return w.Panel(w.Strana.Naziv, func(gtx C) D { return D{} }, lista(w.ctx, w.sh, w.UI.Tema, "/"), func(gtx C) D { return D{} })
+	return w.Panel(w.Strana.Naziv, func(gtx C) D { return D{} }, w.itemsList(), func(gtx C) D { return D{} })
 }
 
 func (w *GioIPFS) listaAAA() func(gtx C) D {
@@ -32,56 +30,47 @@ func (w *GioIPFS) listaAAA() func(gtx C) D {
 				helper.DuoUIline(false, 0, 0, 1, w.UI.Tema.Colors["Gray"]),
 			)
 		})
+
 	}
 }
 
-func lista(ctx context.Context, sh *shell.Shell, th *theme.DuoUItheme, path string) func(gtx C) D {
+func (w *GioIPFS) itemsList() func(gtx C) D {
 	return func(gtx C) D {
-		gtx.Constraints.Min.X = gtx.Constraints.Max.X
-		stat, err := sh.FilesStat(ctx, path)
-		if err != nil {
-			fmt.Fprintf(os.Stderr, "error: %s", err)
-			os.Exit(1)
-		}
-		f, err := sh.ObjectGet(stat.Hash)
-		checkError(err)
-
-		files := generateItemsView(f.Links)
-
-		return contentList.Layout(gtx, len(files), func(gtx C, i int) D {
-			file := files[i]
+		return contentList.Layout(gtx, len(w.ItemsList), func(gtx C, i int) D {
+			item := w.ItemsList[i]
 			return lyt.Format(gtx, "vflexb(middle,r(_),r(_))",
 				func(gtx C) D {
-					return lyt.Format(gtx, "hflexb(middle,r(_),f(0.8,_),r(_),f(0.2,_),r(_))",
-						func(gtx C) D {
-							return material.CheckBox(th.T, file.check, "").Layout(gtx)
-						},
-						func(gtx C) D {
-							return lyt.Format(gtx, "vflexb(middle,r(_),r(_))",
-
-								func(gtx C) D {
-									return material.Body1(th.T, file.Name).Layout(gtx)
-								},
-								func(gtx C) D {
-									return material.Body1(th.T, file.Hash).Layout(gtx)
-								},
-							)
-						},
-						func(gtx C) D {
-							return material.Body1(th.T, "0").Layout(gtx)
-						},
-						func(gtx C) D {
-							return material.Body1(th.T, fmt.Sprint(file.Size)).Layout(gtx)
-						},
-						func(gtx C) D {
-							return material.Body1(th.T, "0").Layout(gtx)
-						},
-					)
+					b := itembtn.ItemBtn(w.UI.Tema.T, item.btn, item.check, w.UI.Tema.Icons["GlyphFolder"], w.UI.Tema.Icons["GlyphDots"], item.Name, item.Hash, item.Size).Layout(gtx)
+					for item.btn.Clicked() {
+						w.lista("/" + item.Name)
+					}
+					return b
 				},
-				helper.DuoUIline(false, 0, 0, 1, th.Colors["Gray"]),
+
+				helper.DuoUIline(false, 0, 0, 1, w.UI.Tema.Colors["Gray"]),
 			)
 		})
 	}
+}
+
+//func itemClicked(w *WingCMS,l sadrzaj.TipSadrzajaPrikaz) {
+//	for l.Link.Clicked() {
+//		w.Strana = WingStrana{l.Naziv, l.SlugMnozina}
+//		//w.Prikaz = w.Db.DbReadAll(l.SlugMnozina)
+//	}
+//	return
+//}
+
+func (w *GioIPFS) lista(path string) {
+	stat, err := w.sh.FilesStat(w.ctx, path)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "error: %s", err)
+		os.Exit(1)
+	}
+	f, err := w.sh.ObjectGet(stat.Hash)
+	checkError(err)
+
+	w.ItemsList = generateItemsView(f.Links)
 }
 
 func generateItemsView(items []shell.ObjectLink) []folderListItem {

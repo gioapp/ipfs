@@ -58,7 +58,7 @@ func NewGioIPFS() *GioIPFS {
 			Btn:   new(widget.Clickable),
 		},
 	}
-
+	w.lista("/")
 	return w
 }
 
