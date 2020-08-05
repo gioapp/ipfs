@@ -3,16 +3,18 @@ package itembtn
 import (
 	"fmt"
 	"gioui.org/layout"
+	"gioui.org/text"
 	"gioui.org/unit"
 	"gioui.org/widget"
 	"gioui.org/widget/material"
 	"github.com/gioapp/gel/helper"
+	"github.com/gioapp/ipfs/pkg/theme"
 	"github.com/w-ingsolutions/c/pkg/lyt"
 	"image"
 )
 
 type ItemButton struct {
-	Theme      *material.Theme
+	Theme      *theme.Theme
 	Button     *widget.Clickable
 	Check      *widget.Bool
 	Name       string
@@ -22,7 +24,7 @@ type ItemButton struct {
 	IconDots   *widget.Icon
 }
 
-func ItemBtn(t *material.Theme, b *widget.Clickable, c *widget.Bool, iconFolder, iconDots *widget.Icon, name, hash string, size uint64) ItemButton {
+func ItemBtn(t *theme.Theme, b *widget.Clickable, c *widget.Bool, iconFolder, iconDots *widget.Icon, name, hash string, size uint64) ItemButton {
 	return ItemButton{
 		Theme:      t,
 		Button:     b,
@@ -38,10 +40,10 @@ func ItemBtn(t *material.Theme, b *widget.Clickable, c *widget.Bool, iconFolder,
 func (b ItemButton) Layout(gtx layout.Context) layout.Dimensions {
 	return lyt.Format(gtx, "hflexb(middle,r(_),f(0.8,_),r(_),f(0.2,_),r(_))",
 		func(gtx layout.Context) layout.Dimensions {
-			return material.CheckBox(b.Theme, b.Check, "").Layout(gtx)
+			return material.CheckBox(b.Theme.T, b.Check, "").Layout(gtx)
 		},
 		func(gtx layout.Context) layout.Dimensions {
-			bb := material.ButtonLayout(b.Theme, b.Button)
+			bb := material.ButtonLayout(b.Theme.T, b.Button)
 			bb.CornerRadius = unit.Dp(0)
 			bb.Background = helper.HexARGB("ffffffff")
 			return bb.Layout(gtx, func(gtx layout.Context) layout.Dimensions {
@@ -51,7 +53,7 @@ func (b ItemButton) Layout(gtx layout.Context) layout.Dimensions {
 					layIcon := layout.Rigid(func(gtx layout.Context) layout.Dimensions {
 						return layout.Inset{}.Layout(gtx, func(gtx layout.Context) layout.Dimensions {
 							//size := gtx.Px(b.IconSize) - 2*gtx.Px(unit.Dp(16))
-							b.IconFolder.Color = b.Theme.Color.Text
+							b.IconFolder.Color = b.Theme.T.Color.Text
 							b.IconFolder.Layout(gtx, unit.Px(float32(32)))
 							return layout.Dimensions{
 								Size: image.Point{X: 32, Y: 32},
@@ -62,10 +64,14 @@ func (b ItemButton) Layout(gtx layout.Context) layout.Dimensions {
 
 						return lyt.Format(gtx, "vflexb(middle,r(_),r(_))",
 							func(gtx layout.Context) layout.Dimensions {
-								return material.Body1(b.Theme, b.Name).Layout(gtx)
+								name := theme.Body(b.Theme, b.Name)
+								name.Alignment = text.Start
+								return name.Layout(gtx)
 							},
 							func(gtx layout.Context) layout.Dimensions {
-								return material.Body1(b.Theme, b.Hash).Layout(gtx)
+								hash := theme.Small(b.Theme, b.Hash)
+								hash.Alignment = text.Start
+								return hash.Layout(gtx)
 							},
 						)
 					})
@@ -74,15 +80,15 @@ func (b ItemButton) Layout(gtx layout.Context) layout.Dimensions {
 			})
 		},
 		func(gtx layout.Context) layout.Dimensions {
-			return material.Body1(b.Theme, "0").Layout(gtx)
+			return theme.Body(b.Theme, "0").Layout(gtx)
 		},
 		func(gtx layout.Context) layout.Dimensions {
-			return material.Body1(b.Theme, fmt.Sprint(b.Size)).Layout(gtx)
+			return theme.Body(b.Theme, fmt.Sprint(b.Size)).Layout(gtx)
 		},
 		func(gtx layout.Context) layout.Dimensions {
 			return layout.Inset{}.Layout(gtx, func(gtx layout.Context) layout.Dimensions {
 				//size := gtx.Px(b.IconSize) - 2*gtx.Px(unit.Dp(16))
-				b.IconDots.Color = b.Theme.Color.Text
+				b.IconDots.Color = b.Theme.T.Color.Text
 				b.IconDots.Layout(gtx, unit.Px(float32(32)))
 				return layout.Dimensions{
 					Size: image.Point{X: 32, Y: 32},

@@ -5,8 +5,9 @@ import (
 	"gioui.org/unit"
 	"gioui.org/widget"
 	"github.com/gioapp/gel/helper"
-	"github.com/gioapp/gel/theme"
 	"github.com/gioapp/ipfs/pkg/icontextbtn"
+	"github.com/gioapp/ipfs/pkg/theme"
+	"github.com/w-ingsolutions/c/pkg/lyt"
 )
 
 var (
@@ -33,22 +34,21 @@ type Logo struct {
 	Logo  string
 }
 
-func (n *Navigation) Nav(th *theme.DuoUItheme, gtx layout.Context) layout.Dimensions {
-	//var nav []func(gtx layout.Context) layout.Dimensions
-	//nav = append(nav, func(gtx layout.Context) layout.Dimensions {
-	//	return material.Body1(th.T, "testr").Layout(gtx)
-	//})
-	gtx.Constraints.Max.X = 180
-	return navList.Layout(gtx, len(n.Items), func(gtx layout.Context, i int) layout.Dimensions {
-		item := n.Items[i]
-
-		btn := icontextbtn.IconTextBtn(th.T, item.Btn, item.Icon, unit.Dp(48), th.Colors["White"], item.Title)
-
-		btn.IconSize = unit.Dp(72)
-		btn.TextSize = unit.Dp(12)
-		btn.Axis = layout.Horizontal
-		btn.CornerRadius = unit.Dp(0)
-		btn.Background = helper.HexARGB(th.Colors["Primary"])
-		return btn.Layout(gtx)
-	})
+func (n *Navigation) Nav(th *theme.Theme, gtx layout.Context, width int, noText bool, logo func(gtx layout.Context) layout.Dimensions) layout.Dimensions {
+	gtx.Constraints.Min.X = width
+	gtx.Constraints.Max.X = width
+	gtx.Constraints.Min.Y = gtx.Constraints.Max.Y
+	helper.Fill(gtx, helper.HexARGB(n.Bg))
+	return lyt.Format(gtx, "vflexs(start,r(_),f(1,_))",
+		logo,
+		func(gtx layout.Context) layout.Dimensions {
+			return navList.Layout(gtx, len(n.Items), func(gtx layout.Context, i int) layout.Dimensions {
+				item := n.Items[i]
+				btn := icontextbtn.IconTextBtn(th, item.Btn, item.Icon, unit.Dp(85), th.Colors["Info"], item.Title, noText)
+				btn.TextSize = unit.Dp(16)
+				btn.CornerRadius = unit.Dp(0)
+				btn.Background = helper.HexARGB(th.Colors["NavBg"])
+				return btn.Layout(gtx)
+			})
+		})
 }

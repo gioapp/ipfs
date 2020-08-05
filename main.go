@@ -6,51 +6,68 @@ import (
 	_ "gioui.org/app/permission/storage"
 	"gioui.org/io/system"
 	"gioui.org/layout"
-	"github.com/gioapp/gel/helper"
 	gipfs "github.com/gioapp/ipfs/app"
 	"github.com/gioapp/ipfs/cfg"
 	in "github.com/gioapp/ipfs/cfg/ini"
+
 	"log"
 	"os"
+	"time"
 )
 
 func main() {
-	w := gipfs.NewGioIPFS()
+	g := gipfs.NewGioIPFS()
 
 	if cfg.Initial {
 		fmt.Println("running initial sync")
 	}
-	in.Init(w.Podesavanja.File)
+	in.Init(g.Settings.File)
+	ticker(g.Tik())
 
 	go func() {
 		defer os.Exit(0)
-		if err := loop(w); err != nil {
+		if err := loop(g); err != nil {
 			log.Fatal(err)
 		}
 	}()
 	app.Main()
 }
 
-func loop(w *gipfs.GioIPFS) error {
+func loop(g *gipfs.GioIPFS) error {
 	for {
 		select {
-		case e := <-w.UI.Window.Events():
+		case e := <-g.UI.Window.Events():
 			switch e := e.(type) {
 			case system.DestroyEvent:
 				return e.Err
 			case system.FrameEvent:
-				w.UI.Context = layout.NewContext(&w.UI.Ops, e)
-				helper.Fill(w.UI.Context, helper.HexARGB(w.UI.Tema.Colors["Light"]))
+				g.UI.Context = layout.NewContext(&g.UI.Ops, e)
 
-				//if !w.API.OK {
-				//w.GreskaEkran()
+				//if !g.API.OK {
+				//g.GreskaEkran()
 				//} else {
-				w.GlavniEkran(w.UI.Context)
+				g.AppMain()
 				//}
 
-				e.Frame(w.UI.Context.Ops)
+				e.Frame(g.UI.Context.Ops)
 			}
-			w.UI.Window.Invalidate()
+			g.UI.Window.Invalidate()
 		}
 	}
+}
+
+func ticker(f func()) {
+	ticker := time.NewTicker(10 * time.Second)
+	quit := make(chan struct{})
+	go func() {
+		for {
+			select {
+			case <-ticker.C:
+				f()
+			case <-quit:
+				ticker.Stop()
+				return
+			}
+		}
+	}()
 }

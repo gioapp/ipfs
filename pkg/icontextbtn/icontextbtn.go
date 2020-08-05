@@ -7,12 +7,13 @@ import (
 	"gioui.org/widget"
 	"gioui.org/widget/material"
 	"github.com/gioapp/gel/helper"
+	"github.com/gioapp/ipfs/pkg/theme"
 	"image"
 	"image/color"
 )
 
 type IconTextButton struct {
-	Theme        *material.Theme
+	Theme        *theme.Theme
 	Button       *widget.Clickable
 	Background   color.RGBA
 	Icon         *widget.Icon
@@ -21,10 +22,10 @@ type IconTextButton struct {
 	Text         string
 	TextSize     unit.Value
 	CornerRadius unit.Value
-	Axis         layout.Axis
+	noText       bool
 }
 
-func IconTextBtn(t *material.Theme, b *widget.Clickable, i *widget.Icon, is unit.Value, c, w string) IconTextButton {
+func IconTextBtn(t *theme.Theme, b *widget.Clickable, i *widget.Icon, is unit.Value, c, w string, noText bool) IconTextButton {
 	return IconTextButton{
 		Theme:     t,
 		Button:    b,
@@ -33,21 +34,24 @@ func IconTextBtn(t *material.Theme, b *widget.Clickable, i *widget.Icon, is unit
 		IconSize:  is,
 		Text:      w,
 		TextSize:  unit.Dp(16),
+		noText:    noText,
 	}
 }
 
 func (b IconTextButton) Layout(gtx layout.Context) layout.Dimensions {
-	bb := material.ButtonLayout(b.Theme, b.Button)
-	bb.CornerRadius = b.CornerRadius
-	bb.Background = b.Background
-	return bb.Layout(gtx, func(gtx layout.Context) layout.Dimensions {
-		return layout.UniformInset(unit.Dp(4)).Layout(gtx, func(gtx layout.Context) layout.Dimensions {
+	return material.Clickable(gtx, b.Button, func(gtx layout.Context) layout.Dimensions {
+		var laftMargin float32 = 64
+		if b.noText {
+			laftMargin = 35
+		}
+		return layout.Inset{
+			Top:    unit.Dp(16),
+			Right:  unit.Dp(24),
+			Bottom: unit.Dp(16),
+			Left:   unit.Dp(laftMargin),
+		}.Layout(gtx, func(gtx layout.Context) layout.Dimensions {
 			gtx.Constraints.Min.X = gtx.Constraints.Max.X
-			var razmak float32
-			if b.Axis != layout.Horizontal {
-				razmak = 4
-			}
-			iconAndLabel := layout.Flex{Axis: b.Axis, Alignment: layout.Middle, Spacing: layout.SpaceBetween}
+			iconAndLabel := layout.Flex{Alignment: layout.Middle}
 			layIcon := layout.Rigid(func(gtx layout.Context) layout.Dimensions {
 				return layout.Inset{}.Layout(gtx, func(gtx layout.Context) layout.Dimensions {
 					var d layout.Dimensions
@@ -64,22 +68,26 @@ func (b IconTextButton) Layout(gtx layout.Context) layout.Dimensions {
 				})
 			})
 			layLabel := layout.Rigid(func(gtx layout.Context) layout.Dimensions {
-				return layout.Inset{Top: unit.Dp(razmak)}.Layout(gtx, func(gtx layout.Context) layout.Dimensions {
-					l := material.Body1(b.Theme, b.Text)
+				return layout.Inset{
+					Top:    unit.Dp(4),
+					Right:  unit.Dp(8),
+					Bottom: unit.Dp(4),
+					Left:   unit.Dp(16),
+				}.Layout(gtx, func(gtx layout.Context) layout.Dimensions {
+					l := theme.Body(b.Theme, b.Text)
 					l.TextSize = b.TextSize
 					l.Alignment = text.Middle
-					l.Color = b.Theme.Color.InvText
+					l.Color = helper.HexARGB(b.Theme.Colors["Info"])
 					return l.Layout(gtx)
 				})
 			})
+			var lays []layout.FlexChild
+			lays = append(lays, layIcon)
+			if !b.noText {
+				lays = append(lays, layLabel)
 
-			layOne := layIcon
-			layTwo := layLabel
-			if b.Axis != layout.Vertical {
-				layOne = layIcon
-				layTwo = layLabel
 			}
-			return iconAndLabel.Layout(gtx, layOne, layTwo)
+			return iconAndLabel.Layout(gtx, lays...)
 		})
 	})
 }

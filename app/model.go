@@ -6,8 +6,8 @@ import (
 	"gioui.org/layout"
 	"gioui.org/op"
 	"gioui.org/widget"
-	"github.com/gioapp/gel/theme"
 	"github.com/gioapp/ipfs/pkg/nav"
+	"github.com/gioapp/ipfs/pkg/theme"
 	shell "github.com/ipfs/go-ipfs-api"
 )
 
@@ -21,27 +21,32 @@ var (
 )
 
 type GioIPFS struct {
-	Strana gipfsStrana
+	Page gipfsPage
 	//Db                   *jdb.JavazacDB
 	sh  *shell.Shell
 	ctx context.Context
 	UI  gipfsUI
 
-	menuItems   []nav.Item
-	Podesavanja gipfsPodesavanja
-	Prikaz      prikaz
-	ItemsList   []folderListItem
+	menuItems []nav.Item
+	Settings  gipfsSettings
+
+	ItemsList []*folderListItem
+
+	Status Status
+
+	daemonConnected chan bool
 }
 
-type prikaz struct {
-	w map[string]interface{}
-	e []func(gtx C) D
-}
+//type prikaz struct {
+//	w map[string]interface{}
+//	e []func(gtx C) D
+//}
 
 type folderListItem struct {
 	Name  string
 	Hash  string
 	Size  uint64
+	Type  uint8
 	btn   *widget.Clickable
 	check *widget.Bool
 }
@@ -49,20 +54,17 @@ type folderListItem struct {
 type gipfsUI struct {
 	Device  string
 	Window  *app.Window
-	Tema    *theme.DuoUItheme
+	Theme   *theme.Theme
 	Context layout.Context
-	Ekran   func(gtx layout.Context) layout.Dimensions
-	Ops     op.Ops
+	//Ekran   func(gtx layout.Context) layout.Dimensions
+	FontSize float32
+	logoText widget.Image
+	logo     widget.Image
+	mob      bool
+	Ops      op.Ops
 }
 
-type gipfsPodesavanja struct {
-	Naziv string
-	Dir   string
-	File  string
-	Cyr   bool
-}
-
-type gipfsStrana struct {
-	Naziv string
-	Slug  string
+type gipfsSettings struct {
+	Dir  string
+	File string
 }

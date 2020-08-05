@@ -7,6 +7,9 @@ import (
 func NewIPFSicons() (i map[string]*widget.Icon) {
 	i = make(map[string]*widget.Icon)
 	//i["logo"] = mustIcon(widget.NewIcon(logo.Wing))
+	i["IpfsLogoBottom"] = mustIcon(widget.NewIcon(IpfsLogoBottom))
+	i["IpfsLogoMid"] = mustIcon(widget.NewIcon(IpfsLogoMid))
+	i["IpfsLogoTop"] = mustIcon(widget.NewIcon(IpfsLogoTop))
 	i["GlyphAdd"] = mustIcon(widget.NewIcon(GlyphAdd))
 	i["GlyphAttention"] = mustIcon(widget.NewIcon(GlyphAttention))
 	i["GlyphBasket"] = mustIcon(widget.NewIcon(GlyphBasket))
