@@ -9,35 +9,27 @@ import (
 	"gioui.org/widget"
 	"github.com/gioapp/gel/helper"
 	"github.com/gioapp/ipfs/pkg/icon/icons"
-	"github.com/gioapp/ipfs/pkg/nav"
 	"github.com/gioapp/ipfs/pkg/theme"
 	shell "github.com/ipfs/go-ipfs-api"
-	"image"
 	"image/png"
 	"os"
 )
 
-var (
-	ipfsLogoTextImageOp = paint.ImageOp{}
-	ipfsLogoImageOp     = paint.ImageOp{}
-	ipfsLogoTextImage   image.Image
-	ipfsLogoImage       image.Image
-)
-
 func NewGioIPFS() *GioIPFS {
-
 	g := &GioIPFS{
 		//Db:     jdb.New("db"),
-		sh:              shell.NewShell("/ip4/127.0.0.1/tcp/5001"),
-		ctx:             context.Background(),
-		daemonConnected: make(chan bool),
+		sh:  shell.NewShell("/ip4/127.0.0.1/tcp/5001"),
+		ctx: context.Background(),
 	}
 
 	g.UI = gipfsUI{
 		Theme: theme.NewTheme(),
 		//mob:   make(chan bool),
+
 	}
+	currentPage = "Status"
 	g.UI.Theme.Icons = icons.NewIPFSicons()
+	g.UI.pages = g.getPages()
 	g.UI.Theme.T.Color.Primary = helper.HexARGB(g.UI.Theme.Colors["Primary"])
 	g.UI.Theme.T.Color.Text = helper.HexARGB(g.UI.Theme.Colors["Charcoal"])
 	g.UI.Theme.T.Color.Hint = helper.HexARGB(g.UI.Theme.Colors["Silver"])
@@ -45,70 +37,100 @@ func NewGioIPFS() *GioIPFS {
 		app.Size(unit.Dp(1280), unit.Dp(1024)),
 		app.Title("IPFS"),
 	)
-	g.menuItems = []nav.Item{
-		nav.Item{
-			Title: "Status",
-			Icon:  g.UI.Theme.Icons["StrokeMarketing"],
-			Btn:   new(widget.Clickable),
-		},
-		nav.Item{
-			Title: "Files",
-			Icon:  g.UI.Theme.Icons["StrokeWeb"],
-			Btn:   new(widget.Clickable),
-		},
-		nav.Item{
-			Title: "Explore",
-			Icon:  g.UI.Theme.Icons["StrokeIpld"],
-			Btn:   new(widget.Clickable),
-		},
-		nav.Item{
-			Title: "Peers",
-			Icon:  g.UI.Theme.Icons["StrokeCube"],
-			Btn:   new(widget.Clickable),
-		},
-		nav.Item{
-			Title: "Settings",
-			Icon:  g.UI.Theme.Icons["StrokeSettings"],
-			Btn:   new(widget.Clickable),
-		},
-	}
-
+	g.menuItems = g.getMenuItems()
+	//for _, item :=range g.menuItems{
+	//	for item.Btn.Clicked(){
+	//		g.UI.currentPage = item.Title
+	//		fmt.Println("ttt",item.Title)
+	//
+	//	}
+	//}
+	//g.Status.Live = statLive{}
+	//g.Page = gipfsPage{
+	//	Title:  "Status",
+	//	Header: g.statusHeader(),
+	//	Body:   g.statusBody(),
+	//}
+	getImages()
 	g.GetStatus()
-	g.Status.Live = statLive{}
 
-	g.Page = gipfsPage{
-		Title:  "Status",
-		Header: g.statusHeader(),
-		Body:   g.statusBody(),
-	}
+	//suffixes[0] = "B"
+	//suffixes[1] = "KB"
+	//suffixes[2] = "MB"
+	//suffixes[3] = "GB"
+	//suffixes[4] = "TB"
 
-	ipfsLogoTextImageFile, err := os.Open("/home/marcetin/go/src/github.com/gioapp/ipfs/pkg/icon/logo/ipfs-logo-text.png")
-	checkError(err)
-	defer ipfsLogoTextImageFile.Close()
-	ipfsLogoTextImage, err = png.Decode(ipfsLogoTextImageFile)
-	checkError(err)
-
-	ipfsLogoImageFile, err := os.Open("/home/marcetin/go/src/github.com/gioapp/ipfs/pkg/icon/logo/ipfs-logo.png")
-	checkError(err)
-	defer ipfsLogoImageFile.Close()
-	ipfsLogoImage, err = png.Decode(ipfsLogoImageFile)
-	checkError(err)
-
-	logoText := paint.NewImageOp(ipfsLogoTextImage)
-	g.UI.logoText = widget.Image{
-		Src:   logoText,
-		Scale: 1,
-	}
-	logo := paint.NewImageOp(ipfsLogoImage)
-	g.UI.logo = widget.Image{
-		Src:   logo,
-		Scale: 1,
-	}
 	return g
 }
 
 func checkError(err error) {
 	if err != nil {
 		fmt.Println("Fatal error ", err.Error())
+	}
+}
+
+func (g *GioIPFS) getMenuItems() []Item {
+	return []Item{
+		Item{
+			Title: "Status",
+			Icon:  g.UI.Theme.Icons["StrokeMarketing"],
+			Btn:   new(widget.Clickable),
+		},
+		Item{
+			Title: "Files",
+			Icon:  g.UI.Theme.Icons["StrokeWeb"],
+			Btn:   new(widget.Clickable),
+		},
+		Item{
+			Title: "Explore",
+			Icon:  g.UI.Theme.Icons["StrokeIpld"],
+			Btn:   new(widget.Clickable),
+		},
+		Item{
+			Title: "Peers",
+			Icon:  g.UI.Theme.Icons["StrokeCube"],
+			Btn:   new(widget.Clickable),
+		},
+		Item{
+			Title: "Settings",
+			Icon:  g.UI.Theme.Icons["StrokeSettings"],
+			Btn:   new(widget.Clickable),
+		},
+	}
+}
+
+func getImages() {
+	ipfsLogoTextImageFile, err := os.Open("/home/marcetin/go/src/github.com/gioapp/ipfs/pkg/icon/logo/ipfs-text.png")
+	checkError(err)
+	defer ipfsLogoTextImageFile.Close()
+	ipfsLogoTextImage, err = png.Decode(ipfsLogoTextImageFile)
+	checkError(err)
+
+	ipfsLogoImageFile, err := os.Open("/home/marcetin/go/src/github.com/gioapp/ipfs/pkg/icon/logo/ipfs.png")
+	checkError(err)
+	defer ipfsLogoImageFile.Close()
+	ipfsLogoImage, err = png.Decode(ipfsLogoImageFile)
+	checkError(err)
+
+	ipldLogoImageFile, err := os.Open("/home/marcetin/go/src/github.com/gioapp/ipfs/pkg/icon/logo/ipld.png")
+	checkError(err)
+	defer ipldLogoImageFile.Close()
+	ipldLogoImage, err = png.Decode(ipldLogoImageFile)
+	checkError(err)
+
+	logoText := paint.NewImageOp(ipfsLogoTextImage)
+	logoTextImage = widget.Image{
+		Src:   logoText,
+		Scale: 1,
+	}
+	logo := paint.NewImageOp(ipfsLogoImage)
+	logoImage = widget.Image{
+		Src:   logo,
+		Scale: 1,
+	}
+	logoIpld := paint.NewImageOp(ipldLogoImage)
+	logoIpldImage = widget.Image{
+		Src:   logoIpld,
+		Scale: 1,
 	}
 }

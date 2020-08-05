@@ -87,6 +87,10 @@ func (b IconTextButton) Layout(gtx layout.Context) layout.Dimensions {
 				lays = append(lays, layLabel)
 
 			}
+			//for  b.Button.Clicked(){
+			//	g.UI.currentPage = b.Title
+			//	fmt.Println("ttt",b.Title)
+			//}
 			return iconAndLabel.Layout(gtx, lays...)
 		})
 	})

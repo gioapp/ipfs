@@ -3,17 +3,9 @@ package gipfs
 import (
 	"gioui.org/layout"
 	"gioui.org/unit"
-	"gioui.org/widget"
 	"gioui.org/widget/material"
 	"github.com/gioapp/gel/helper"
 	"github.com/w-ingsolutions/c/pkg/lyt"
-)
-
-var (
-	headerSearchInput = &widget.Editor{
-		SingleLine: true,
-		Submit:     true,
-	}
 )
 
 func (g *GioIPFS) header() func(gtx C) D {
@@ -27,10 +19,25 @@ func (g *GioIPFS) header() func(gtx C) D {
 }
 func (g *GioIPFS) headerMenu() func(gtx C) D {
 	return func(gtx C) D {
+		for tourBtn.Clicked() {
+
+			currentPage = "Welcome"
+		}
 		return lyt.Format(gtx, "hflexb(middle,r(_),r(_),r(_))",
-			g.pageButton(welcomeBtn, func() {}, "StrokeCase"),
+			g.pageButton(tourBtn, func() {}, "StrokeCase", ""),
 			helper.DuoUIline(true, 0, 2, 2, g.UI.Theme.Colors["DarkGrayI"]),
-			g.pageButton(tourBtn, func() {}, "GlyphPencil"),
+			//g.pageButton(tourBtn, func() {}, "GlyphPencil", "Welcome"),
+			func(gtx C) D {
+				btn := material.IconButton(g.UI.Theme.T, welcomeBtn, g.UI.Theme.Icons["GlyphPencil"])
+				btn.Inset = layout.Inset{unit.Dp(2), unit.Dp(2), unit.Dp(2), unit.Dp(2)}
+				btn.Size = unit.Dp(21)
+				btn.Background = helper.HexARGB(g.UI.Theme.Colors["Secondary"])
+				for welcomeBtn.Clicked() {
+					//f()
+					currentPage = "Welcome"
+				}
+				return btn.Layout(gtx)
+			},
 		)
 	}
 
@@ -45,7 +52,7 @@ func (g *GioIPFS) headerSearch() func(gtx C) D {
 				return e.Layout(gtx)
 			}),
 			func(gtx C) D {
-				e := material.Button(g.UI.Theme.T, welcomeBtn, "Browse")
+				e := material.Button(g.UI.Theme.T, browseBtn, "Browse")
 				e.Inset = layout.Inset{
 					Top:    unit.Dp(4),
 					Right:  unit.Dp(4),

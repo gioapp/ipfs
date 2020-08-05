@@ -1,30 +1,13 @@
 package gipfs
 
 import (
-	"fmt"
 	"gioui.org/text"
 	"github.com/gioapp/gel/helper"
 	"github.com/gioapp/ipfs/pkg/theme"
 	"github.com/w-ingsolutions/c/pkg/lyt"
+	"math"
+	"strconv"
 )
-
-type Status struct {
-	Title       string
-	HostingSize uint
-	PeerId      string
-	Version     string
-	Gateway     string
-	Api         string
-	Addresses   []string
-	Pub         string
-	Live        statLive
-}
-type statLive struct {
-	RateOut  float64
-	RateIn   float64
-	TotalIn  int64
-	TotalOut int64
-}
 
 func (g *GioIPFS) GetStatus() {
 	f, err := g.sh.ID()
@@ -44,10 +27,10 @@ func (g *GioIPFS) GetStatus() {
 }
 
 func (g *GioIPFS) GetLiveStat() {
+
 	fbw, err := g.sh.StatsBW(g.ctx)
 	checkError(err)
-	fmt.Println("sss", fbw)
-	g.Status.Live = statLive{
+	live = &statLive{
 		//HostingSize: "uint",
 		RateOut:  fbw.RateOut,
 		RateIn:   fbw.RateIn,
@@ -118,13 +101,58 @@ func statusRow(th *theme.Theme, label string, content func(gtx C) D) func(gtx C)
 func (g *GioIPFS) statusBody() []func(gtx C) D {
 	return []func(gtx C) D{
 		func(gtx C) D {
-			//return lyt.Format(gtx, "vflexb(middle,r(inset(5dp0dp5dp0dp,_)),r(inset(5dp0dp30dp0dp,_)),r(inset(5dp0dp5dp0dp,_),r(inset(5dp0dp5dp0dp,_)))",
-			//	statusRow(g.UI.Theme, "RateIn: ", row(g.UI.Theme, fmt.Sprint(g.Status.Live.RateIn))),
-			//	statusRow(g.UI.Theme, "RateOut: ", row(g.UI.Theme, fmt.Sprint(g.Status.Live.RateOut))),
-			//	statusRow(g.UI.Theme, "TotalIn: ", row(g.UI.Theme, fmt.Sprint(g.Status.Live.TotalIn))),
-			//	statusRow(g.UI.Theme, "TotalOut: ", row(g.UI.Theme, fmt.Sprint(g.Status.Live.TotalOut))),
-			//)
-			return D{}
+			var (
+				rateIn   string = "0"
+				rateOut  string = "0"
+				totalIn  string = "0"
+				totalOut string = "0"
+			)
+			//if live != nil {
+			if live.RateIn != 0 {
+				rateIn = formatByteSize(live.RateIn)
+			}
+			if live.RateOut != 0 {
+				rateOut = formatByteSize(live.RateOut)
+			}
+			if live.TotalIn != 0 {
+				totalIn = formatByteSize(float64(live.TotalIn))
+			}
+			if live.TotalOut != 0 {
+				totalOut = formatByteSize(float64(live.TotalOut))
+			}
+
+			//fmt.Println("gore", formatByteSize(0))
+			//}
+			return lyt.Format(gtx, "vflexb(middle,r(_),r(_),r(_),r(_))",
+				statusRow(g.UI.Theme, "RateIn: ", row(g.UI.Theme, rateIn)),
+				statusRow(g.UI.Theme, "RateOut: ", row(g.UI.Theme, rateOut)),
+				statusRow(g.UI.Theme, "TotalIn: ", row(g.UI.Theme, totalIn)),
+				statusRow(g.UI.Theme, "TotalOut: ", row(g.UI.Theme, totalOut)),
+			)
+			//return D{}
 		},
 	}
+}
+
+func Round(val float64, roundOn float64, places int) (newVal float64) {
+	var round float64
+	pow := math.Pow(10, float64(places))
+	digit := pow * val
+	_, div := math.Modf(digit)
+	if div >= roundOn {
+		round = math.Ceil(digit)
+	} else {
+		round = math.Floor(digit)
+	}
+	newVal = round / pow
+	return
+}
+
+func formatByteSize(size float64) string {
+	//size := sizeInMB * 1024 * 1024
+	base := math.Log(size) / math.Log(1024)
+	getSize := Round(math.Pow(1024, base-math.Floor(base)), .5, 2)
+	getSuffix := suffixes[int(math.Floor(base))]
+	//fmt.Println("dole", strconv.FormatFloat(getSize, 'f', -1, 64)+" "+string(getSuffix))
+	return strconv.FormatFloat(getSize, 'f', -1, 64) + " " + string(getSuffix)
 }

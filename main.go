@@ -9,7 +9,6 @@ import (
 	gipfs "github.com/gioapp/ipfs/app"
 	"github.com/gioapp/ipfs/cfg"
 	in "github.com/gioapp/ipfs/cfg/ini"
-
 	"log"
 	"os"
 	"time"
@@ -43,11 +42,13 @@ func loop(g *gipfs.GioIPFS) error {
 			case system.FrameEvent:
 				g.UI.Context = layout.NewContext(&g.UI.Ops, e)
 
+				g.BeforeMain()
 				//if !g.API.OK {
 				//g.GreskaEkran()
 				//} else {
 				g.AppMain()
 				//}
+				g.AfterMain()
 
 				e.Frame(g.UI.Context.Ops)
 			}
@@ -57,7 +58,7 @@ func loop(g *gipfs.GioIPFS) error {
 }
 
 func ticker(f func()) {
-	ticker := time.NewTicker(10 * time.Second)
+	ticker := time.NewTicker(1 * time.Second)
 	quit := make(chan struct{})
 	go func() {
 		for {

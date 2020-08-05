@@ -61,7 +61,6 @@ func ReadConfig(configFile, rootDir, sourceLang string) (files []LocalizationFil
 		fmt.Printf("Unable to read %s", configFile)
 		return nil, err
 	}
-	fmt.Println("dadad", string(bytes))
 	var jsonData []configElement
 	if err := json.Unmarshal(bytes, &jsonData); err != nil {
 		return nil, err

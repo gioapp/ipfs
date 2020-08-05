@@ -6,7 +6,6 @@ import (
 	"gioui.org/layout"
 	"gioui.org/op"
 	"gioui.org/widget"
-	"github.com/gioapp/ipfs/pkg/nav"
 	"github.com/gioapp/ipfs/pkg/theme"
 	shell "github.com/ipfs/go-ipfs-api"
 )
@@ -21,26 +20,14 @@ var (
 )
 
 type GioIPFS struct {
-	Page gipfsPage
-	//Db                   *jdb.JavazacDB
-	sh  *shell.Shell
-	ctx context.Context
-	UI  gipfsUI
-
-	menuItems []nav.Item
+	sh        *shell.Shell
+	ctx       context.Context
+	UI        gipfsUI
+	menuItems []Item
 	Settings  gipfsSettings
-
 	ItemsList []*folderListItem
-
-	Status Status
-
-	daemonConnected chan bool
+	Status    Status
 }
-
-//type prikaz struct {
-//	w map[string]interface{}
-//	e []func(gtx C) D
-//}
 
 type folderListItem struct {
 	Name  string
@@ -58,13 +45,57 @@ type gipfsUI struct {
 	Context layout.Context
 	//Ekran   func(gtx layout.Context) layout.Dimensions
 	FontSize float32
-	logoText widget.Image
-	logo     widget.Image
-	mob      bool
-	Ops      op.Ops
+
+	mob   bool
+	pages pages
+	Ops   op.Ops
 }
 
 type gipfsSettings struct {
 	Dir  string
 	File string
+}
+
+type gipfsPage struct {
+	Title  string
+	Header func(gtx C) D
+	Body   []func(gtx C) D
+}
+
+type pages map[string]gipfsPage
+
+type Navigation struct {
+	Name  string
+	Bg    string
+	Logo  Logo
+	Items []Item
+}
+type Item struct {
+	Title string
+	Bg    string
+	Icon  *widget.Icon
+	Btn   *widget.Clickable
+	//Page *gipfsPage
+}
+
+type Logo struct {
+	Title string
+	Logo  string
+}
+
+type Status struct {
+	Title       string
+	HostingSize uint
+	PeerId      string
+	Version     string
+	Gateway     string
+	Api         string
+	Addresses   []string
+	Pub         string
+}
+type statLive struct {
+	RateOut  float64
+	RateIn   float64
+	TotalIn  int64
+	TotalOut int64
 }

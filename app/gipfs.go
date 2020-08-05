@@ -1,7 +1,6 @@
 package gipfs
 
 import (
-	"github.com/gioapp/ipfs/pkg/nav"
 	"github.com/w-ingsolutions/c/pkg/lyt"
 )
 
@@ -9,7 +8,7 @@ func (g *GioIPFS) AppMain() {
 	lyt.Format(g.UI.Context, "hflexb(start,r(_),f(1,_))",
 		func(gtx C) D {
 			gtx.Constraints.Min.Y = gtx.Constraints.Max.Y
-			n := nav.Navigation{
+			n := Navigation{
 				Name:  "Navigacion",
 				Bg:    g.UI.Theme.Colors["NavBg"],
 				Items: g.menuItems,
@@ -23,9 +22,17 @@ func (g *GioIPFS) AppMain() {
 		func(gtx C) D {
 			return lyt.Format(gtx, "vflexb(start,r(_),f(1,_))",
 				g.header(),
-				g.page(),
+				g.page(g.UI.pages[currentPage]),
 			)
 		})
+}
+
+func (g *GioIPFS) BeforeMain() {
+
+}
+
+func (g *GioIPFS) AfterMain() {
+
 }
 
 func (g *GioIPFS) Tik() func() {

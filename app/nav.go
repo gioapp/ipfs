@@ -1,38 +1,13 @@
-package nav
+package gipfs
 
 import (
 	"gioui.org/layout"
 	"gioui.org/unit"
-	"gioui.org/widget"
 	"github.com/gioapp/gel/helper"
 	"github.com/gioapp/ipfs/pkg/icontextbtn"
 	"github.com/gioapp/ipfs/pkg/theme"
 	"github.com/w-ingsolutions/c/pkg/lyt"
 )
-
-var (
-	navList = &layout.List{
-		Axis: layout.Vertical,
-	}
-)
-
-type Navigation struct {
-	Name  string
-	Bg    string
-	Logo  Logo
-	Items []Item
-}
-type Item struct {
-	Title string
-	Bg    string
-	Icon  *widget.Icon
-	Btn   *widget.Clickable
-}
-
-type Logo struct {
-	Title string
-	Logo  string
-}
 
 func (n *Navigation) Nav(th *theme.Theme, gtx layout.Context, width int, noText bool, logo func(gtx layout.Context) layout.Dimensions) layout.Dimensions {
 	gtx.Constraints.Min.X = width
@@ -48,6 +23,10 @@ func (n *Navigation) Nav(th *theme.Theme, gtx layout.Context, width int, noText 
 				btn.TextSize = unit.Dp(16)
 				btn.CornerRadius = unit.Dp(0)
 				btn.Background = helper.HexARGB(th.Colors["NavBg"])
+				for item.Btn.Clicked() {
+					currentPage = item.Title
+
+				}
 				return btn.Layout(gtx)
 			})
 		})

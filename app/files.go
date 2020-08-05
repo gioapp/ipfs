@@ -3,21 +3,11 @@ package gipfs
 import (
 	"context"
 	"fmt"
-	"gioui.org/layout"
 	"gioui.org/widget"
 	"github.com/gioapp/gel/helper"
 	"github.com/gioapp/ipfs/pkg/itembtn"
 	shell "github.com/ipfs/go-ipfs-api"
 	"github.com/w-ingsolutions/c/pkg/lyt"
-)
-
-var (
-	contentList = &layout.List{
-		Axis: layout.Vertical,
-	}
-	addressesList = &layout.List{
-		Axis: layout.Vertical,
-	}
 )
 
 func (g *GioIPFS) itemsList() func(gtx C) D {
@@ -56,4 +46,17 @@ func listFolder(ctx context.Context, sh *shell.Shell, path string) []*folderList
 		})
 	}
 	return folder
+}
+func (g *GioIPFS) filesBody() []func(gtx C) D {
+	return []func(gtx C) D{
+		func(gtx C) D {
+			//return lyt.Format(gtx, "vflexb(middle,r(inset(5dp0dp5dp0dp,_)),r(inset(5dp0dp30dp0dp,_)),r(inset(5dp0dp5dp0dp,_),r(inset(5dp0dp5dp0dp,_)))",
+			//	statusRow(g.UI.Theme, "RateIn: ", row(g.UI.Theme, fmt.Sprint(g.Status.Live.RateIn))),
+			//	statusRow(g.UI.Theme, "RateOut: ", row(g.UI.Theme, fmt.Sprint(g.Status.Live.RateOut))),
+			//	statusRow(g.UI.Theme, "TotalIn: ", row(g.UI.Theme, fmt.Sprint(g.Status.Live.TotalIn))),
+			//	statusRow(g.UI.Theme, "TotalOut: ", row(g.UI.Theme, fmt.Sprint(g.Status.Live.TotalOut))),
+			//)
+			return D{}
+		},
+	}
 }

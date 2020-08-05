@@ -1,11 +1,9 @@
 package gipfs
 
 import (
-	"gioui.org/f32"
 	"gioui.org/layout"
 	"gioui.org/widget/material"
 	"github.com/w-ingsolutions/c/pkg/lyt"
-	"image"
 )
 
 func (g *GioIPFS) logo() func(gtx C) D {
@@ -25,16 +23,12 @@ func (g *GioIPFS) logo() func(gtx C) D {
 				inset = "inset(35dp20dp35dp28dp,_)"
 			}
 			return lyt.Format(gtx, inset, func(gtx C) D {
-				logo := g.UI.logoText
+				logo := logoTextImage
 				if g.UI.mob {
-					logo = g.UI.logo
+					logo = logoImage
 				}
 				return logo.Layout(gtx)
 			})
 		})
 	}
-}
-
-func toPointF(p image.Point) f32.Point {
-	return f32.Point{X: float32(p.X), Y: float32(p.Y)}
 }
