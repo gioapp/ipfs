@@ -28,16 +28,16 @@ func (g *GioIPFS) settingsHeader() func(gtx C) D {
 	return ContainerLayout(g.UI.Theme.Colors["PanelBg"], 10, 10, 10, 10, func(gtx C) D {
 		gtx.Constraints.Min.X = gtx.Constraints.Max.X
 		helper.Fill(gtx, helper.HexARGB(g.UI.Theme.Colors["PanelBg"]))
-		return lyt.Format(gtx, "vflexb(middle,r(_),r(_),r(_),r(_),r(_),r(_)))",
+		return lyt.Format(gtx, "vflexb(middle,r(inset(5dp0dp5dp0dp,_)),r(inset(5dp0dp5dp0dp,_)),r(inset(5dp0dp5dp0dp,_)),r(inset(5dp0dp5dp0dp,_)),r(inset(5dp0dp5dp0dp,_)),r(inset(5dp0dp5dp0dp,_))))",
 			func(gtx C) D {
 				gtx.Constraints.Min.X = gtx.Constraints.Max.X
-				title := theme.H1(g.UI.Theme, "LANGUAGE")
+				title := theme.H5(g.UI.Theme, "LANGUAGE")
 				title.Alignment = text.Start
 				return title.Layout(gtx)
 			},
 			func(gtx C) D {
 				gtx.Constraints.Min.X = gtx.Constraints.Max.X
-				title := theme.H1(g.UI.Theme, "BUTTONS")
+				title := theme.H4(g.UI.Theme, "BUTTONS")
 				title.Alignment = text.Start
 				return title.Layout(gtx)
 			},
