@@ -25,7 +25,6 @@ func (n *Navigation) Nav(th *theme.Theme, gtx layout.Context, width int, noText 
 				btn.Background = helper.HexARGB(th.Colors["NavBg"])
 				for item.Btn.Clicked() {
 					currentPage = item.Title
-
 				}
 				return btn.Layout(gtx)
 			})

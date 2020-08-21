@@ -17,6 +17,7 @@ type (
 
 var (
 	selected int
+	pwd      []string
 )
 
 type GioIPFS struct {

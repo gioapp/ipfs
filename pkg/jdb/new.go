@@ -5,6 +5,9 @@ package jdb
 
 import (
 	"context"
+	"github.com/ipfs/go-cid"
+
+	format "github.com/ipfs/go-ipld-format"
 	crypto "github.com/libp2p/go-libp2p-core/crypto"
 )
 
@@ -30,4 +33,9 @@ func New(datastore string) *JavazacDB {
 		peer:  peer,
 		index: make(map[string]string),
 	}
+}
+func (j *JavazacDB) ReadList(c cid.Cid) []*format.Link {
+	rsc, err := j.peer.Get(j.ctx, c)
+	checkError(err)
+	return rsc.Links()
 }

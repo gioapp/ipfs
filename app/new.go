@@ -18,10 +18,10 @@ import (
 func NewGioIPFS() *GioIPFS {
 	g := &GioIPFS{
 		//Db:     jdb.New("db"),
-		sh:  shell.NewShell("/ip4/127.0.0.1/tcp/5001"),
+		sh:  shell.NewShell("/ip4/127.0.0.1/tcp/5011"),
 		ctx: context.Background(),
 	}
-
+	pwd = append(pwd, "Home")
 	g.UI = gipfsUI{
 		Theme: theme.NewTheme(),
 		//mob:   make(chan bool),
@@ -34,7 +34,7 @@ func NewGioIPFS() *GioIPFS {
 	g.UI.Theme.T.Color.Text = helper.HexARGB(g.UI.Theme.Colors["Charcoal"])
 	g.UI.Theme.T.Color.Hint = helper.HexARGB(g.UI.Theme.Colors["Silver"])
 	g.UI.Window = app.NewWindow(
-		app.Size(unit.Dp(1280), unit.Dp(1024)),
+		app.Size(unit.Dp(1024), unit.Dp(800)),
 		app.Title("IPFS"),
 	)
 	g.menuItems = g.getMenuItems()
@@ -53,6 +53,7 @@ func NewGioIPFS() *GioIPFS {
 	//}
 	getImages()
 	g.GetStatus()
+	g.GetFiles()
 
 	//suffixes[0] = "B"
 	//suffixes[1] = "KB"

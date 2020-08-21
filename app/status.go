@@ -24,6 +24,7 @@ func (g *GioIPFS) GetStatus() {
 		Addresses: f.Addresses,
 		Pub:       f.PublicKey,
 	}
+	return
 }
 
 func (g *GioIPFS) GetLiveStat() {
