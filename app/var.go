@@ -27,6 +27,9 @@ var (
 	contentList = &layout.List{
 		Axis: layout.Vertical,
 	}
+	pwdList = &layout.List{
+		Axis: layout.Horizontal,
+	}
 	addressesList = &layout.List{
 		Axis: layout.Vertical,
 	}

@@ -1,16 +1,11 @@
 package gipfs
 
 import (
-	"context"
 	"fmt"
 	_ "gioui.org/app/permission/storage"
 	"gioui.org/layout"
 	"gioui.org/widget"
-	"github.com/gioapp/gel/helper"
-	"github.com/gioapp/ipfs/pkg/itembtn"
-	"github.com/gioapp/ipfs/pkg/theme"
 	shell "github.com/ipfs/go-ipfs-api"
-	"github.com/w-ingsolutions/c/pkg/lyt"
 )
 
 func makeList(item []*shell.MfsLsEntry) I {
@@ -25,59 +20,74 @@ func makeList(item []*shell.MfsLsEntry) I {
 			Check: new(widget.Bool),
 		})
 		fmt.Println("NameMakeLISt", item.Name)
+
 		//fmt.Println("CidCidMakeLISt", item.Cid.)
 	}
 	return itms
 }
-func ItemsList(ctx context.Context, sh *shell.Shell, th *theme.Theme, hash string) func(gtx layout.Context) layout.Dimensions {
-	//c, _ := cid.Decode(hash)
-	//var parentCid cid.Cid
-	list, err := sh.FilesLs(ctx, "/")
-	checkError(err)
-	itms := makeList(list)
-	return func(gtx layout.Context) layout.Dimensions {
-		return lyt.Format(gtx, "vflexb(middle,r(_),f(1,_))",
-			func(gtx layout.Context) layout.Dimensions {
-				return lyt.Format(gtx, "vflexb(middle,r(_),r(_))",
-					func(gtx layout.Context) layout.Dimensions {
-						b := itembtn.ItemBtn(th, upBtn, checkAll, th.Icons["GlyphFolder"], th.Icons["GlyphDots"], "..", "", 0).Layout(gtx)
-						for upBtn.Clicked() {
-							//parentCid = c
 
-							fmt.Println("Name", "/")
-							items, err := sh.FilesLs(ctx, "/")
-							checkError(err)
-							itms = makeList(items)
-						}
-						return b
-					},
-					helper.DuoUIline(false, 0, 0, 1, th.Colors["Gray"]),
-				)
-			},
-			func(gtx layout.Context) layout.Dimensions {
-				return l.Layout(gtx, len(itms), func(gtx layout.Context, i int) layout.Dimensions {
-					itm := itms[i]
-					return lyt.Format(gtx, "vflexb(middle,r(_),r(_))",
-						func(gtx layout.Context) layout.Dimensions {
-							b := itembtn.ItemBtn(th, itm.Btn, itm.Check, th.Icons["GlyphFolder"], th.Icons["GlyphDots"], itm.Name, itm.Cid.String(), itm.Size).Layout(gtx)
-							for itm.Btn.Clicked() {
-								//parentCid = c
-								pwd = append(pwd, itm.Name)
+//func ItemsList(ctx context.Context, sh *shell.Shell, th *theme.Theme, hash string) func(gtx layout.Context) layout.Dimensions {
+//	//c, _ := cid.Decode(hash)
+//	//var parentCid cid.Cid
+//	list, err := sh.FilesLs(ctx, "/")
+//	checkError(err)
+//	itms := makeList(list)
+//	return func(gtx layout.Context) layout.Dimensions {
+//		return lyt.Format(gtx, "vflexb(middle,r(_),f(1,_))",
+//			func(gtx layout.Context) layout.Dimensions {
+//				return lyt.Format(gtx, "vflexb(middle,r(_),r(_))",
+//					func(gtx layout.Context) layout.Dimensions {
+//						b := itembtn.ItemBtn(th, upBtn, checkAll, th.Icons["GlyphFolder"], th.Icons["GlyphDots"], "..", "", 0).Layout(gtx)
+//						for upBtn.Clicked() {
+//							//parentCid = c
+//
+//							fmt.Println("Name", "/")
+//
+//							items, err := sh.FilesLs(ctx, "/")
+//							checkError(err)
+//							itms = makeList(items)
+//						}
+//						return b
+//					},
+//					helper.DuoUIline(false, 0, 0, 1, th.Colors["Gray"]),
+//				)
+//			},
+//			func(gtx layout.Context) layout.Dimensions {
+//				return l.Layout(gtx, len(itms), func(gtx layout.Context, i int) layout.Dimensions {
+//					itm := itms[i]
+//					return lyt.Format(gtx, "vflexb(middle,r(_),r(_))",
+//						func(gtx layout.Context) layout.Dimensions {
+//							b := itembtn.ItemBtn(th, itm.Btn, itm.Check, th.Icons["GlyphFolder"], th.Icons["GlyphDots"], itm.Name, itm.Cid.String(), itm.Size).Layout(gtx)
+//							for itm.Btn.Clicked() {
+//								//parentCid = c
+//								g.pwd = append(g.pwd, itm.Name)
+//								fmt.Println("pwd", g.pwd)
+//
+//								fmt.Println("Name",  pathGen(g.pwd))
+//
+//								items, err := sh.FilesLs(ctx, pathGen(g.pwd))
+//								checkError(err)
+//								itms = makeList(items) //g.ItemsList = listFolder(g.ctx, g.sh, "/"+itm.Name)
+//								//itms = g.jdb.ReadList( "QmSv66pvzJfjwLHuQCYhd3cekGWNX6Q2o5Y268SNMw8fd8")
+//							}
+//							return b
+//						},
+//						helper.DuoUIline(false, 0, 0, 1, th.Colors["Gray"]),
+//					)
+//				})
+//			},
+//		)
+//	}
+//}
 
-								fmt.Println("Name", "/"+itm.Name)
-								items, err := sh.FilesLs(ctx, "/"+itm.Name)
-								checkError(err)
-								itms = makeList(items) //g.ItemsList = listFolder(g.ctx, g.sh, "/"+itm.Name)
-								//itms = g.jdb.ReadList( "QmSv66pvzJfjwLHuQCYhd3cekGWNX6Q2o5Y268SNMw8fd8")
-							}
-							return b
-						},
-						helper.DuoUIline(false, 0, 0, 1, th.Colors["Gray"]),
-					)
-				})
-			},
-		)
+func pathGen(path []string) string {
+	var p string
+	for _, folder := range path {
+		if folder != "Home" {
+			p = p + "/" + folder
+		}
 	}
+	return p
 }
 
 //

@@ -18,10 +18,19 @@ import (
 func NewGioIPFS() *GioIPFS {
 	g := &GioIPFS{
 		//Db:     jdb.New("db"),
-		sh:  shell.NewShell("/ip4/127.0.0.1/tcp/5011"),
+		//sh:  shell.NewShell("/ip4/127.0.0.1/tcp/5011"),
 		ctx: context.Background(),
 	}
+
+	sh := shell.NewShell("/ip4/127.0.0.1/tcp/501")
+	if sh != nil {
+		fmt.Println("shshshshshPRE", sh)
+		g.sh = sh
+		fmt.Println("shshshshsPOSLEh", sh)
+	}
 	pwd = append(pwd, "Home")
+	fmt.Println("ggggsh", g.sh)
+
 	g.UI = gipfsUI{
 		Theme: theme.NewTheme(),
 		//mob:   make(chan bool),

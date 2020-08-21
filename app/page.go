@@ -23,7 +23,7 @@ func (g *GioIPFS) getPages() pages {
 		},
 		"Files": gipfsPage{
 			Title:  "Files",
-			Header: g.itemsList(),
+			Header: g.filesHeader(),
 			Body:   g.filesBody(),
 		},
 		"Explore": gipfsPage{

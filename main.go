@@ -15,6 +15,7 @@ import (
 )
 
 func main() {
+
 	g := gipfs.NewGioIPFS()
 
 	if cfg.Initial {
