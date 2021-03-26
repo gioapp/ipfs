@@ -22,7 +22,7 @@ func NewGioIPFS() *GioIPFS {
 		ctx: context.Background(),
 	}
 
-	sh := shell.NewShell("/ip4/127.0.0.1/tcp/501")
+	sh := shell.NewShell("/ip4/127.0.0.1/tcp/5001")
 	if sh != nil {
 		fmt.Println("shshshshshPRE", sh)
 		g.sh = sh
@@ -110,19 +110,19 @@ func (g *GioIPFS) getMenuItems() []Item {
 }
 
 func getImages() {
-	ipfsLogoTextImageFile, err := os.Open("/home/marcetin/go/src/github.com/gioapp/ipfs/pkg/icon/logo/ipfs-text.png")
+	ipfsLogoTextImageFile, err := os.Open("./pkg/icon/logo/ipfs-text.png")
 	checkError(err)
 	defer ipfsLogoTextImageFile.Close()
 	ipfsLogoTextImage, err = png.Decode(ipfsLogoTextImageFile)
 	checkError(err)
 
-	ipfsLogoImageFile, err := os.Open("/home/marcetin/go/src/github.com/gioapp/ipfs/pkg/icon/logo/ipfs.png")
+	ipfsLogoImageFile, err := os.Open("./pkg/icon/logo/ipfs.png")
 	checkError(err)
 	defer ipfsLogoImageFile.Close()
 	ipfsLogoImage, err = png.Decode(ipfsLogoImageFile)
 	checkError(err)
 
-	ipldLogoImageFile, err := os.Open("/home/marcetin/go/src/github.com/gioapp/ipfs/pkg/icon/logo/ipld.png")
+	ipldLogoImageFile, err := os.Open("./pkg/icon/logo/ipld.png")
 	checkError(err)
 	defer ipldLogoImageFile.Close()
 	ipldLogoImage, err = png.Decode(ipldLogoImageFile)
