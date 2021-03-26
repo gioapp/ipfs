@@ -7,7 +7,7 @@ import (
 	"gioui.org/unit"
 	"gioui.org/widget"
 	"gioui.org/widget/material"
-	"github.com/gioapp/gel/helper"
+	"github.com/gioapp/ipfs/pkg/helper"
 	"github.com/gioapp/ipfs/pkg/theme"
 	"github.com/w-ingsolutions/c/pkg/lyt"
 	"image"

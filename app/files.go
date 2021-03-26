@@ -8,7 +8,7 @@ import (
 
 	"gioui.org/layout"
 	"gioui.org/widget"
-	"github.com/gioapp/gel/helper"
+	"github.com/gioapp/ipfs/pkg/helper"
 	"github.com/gioapp/ipfs/pkg/itembtn"
 	shell "github.com/ipfs/go-ipfs-api"
 	"github.com/w-ingsolutions/c/pkg/lyt"

@@ -3,7 +3,7 @@ package gipfs
 import (
 	"gioui.org/layout"
 	"gioui.org/unit"
-	"github.com/gioapp/gel/helper"
+	"github.com/gioapp/ipfs/pkg/helper"
 	"github.com/gioapp/ipfs/pkg/icontextbtn"
 	"github.com/gioapp/ipfs/pkg/theme"
 	"github.com/w-ingsolutions/c/pkg/lyt"

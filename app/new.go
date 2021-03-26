@@ -7,7 +7,7 @@ import (
 	"gioui.org/op/paint"
 	"gioui.org/unit"
 	"gioui.org/widget"
-	"github.com/gioapp/gel/helper"
+	"github.com/gioapp/ipfs/pkg/helper"
 	"github.com/gioapp/ipfs/pkg/icon/icons"
 	"github.com/gioapp/ipfs/pkg/theme"
 	shell "github.com/ipfs/go-ipfs-api"

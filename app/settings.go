@@ -2,7 +2,7 @@ package gipfs
 
 import (
 	"gioui.org/text"
-	"github.com/gioapp/gel/helper"
+	"github.com/gioapp/ipfs/pkg/helper"
 	"github.com/gioapp/ipfs/pkg/theme"
 	"github.com/w-ingsolutions/c/pkg/lyt"
 )
